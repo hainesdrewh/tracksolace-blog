@@ -40,7 +40,14 @@
 <footer class="site-footer">
   <div class="container footer-row">
     <span>&copy; <span class="current-year">2026</span> tracksolace</span>
-    <a href="{{ url_for('rss') }}">RSS feed</a>
+    <span class="footer-links">
+      <a href="{{ url_for('rss') }}">RSS</a>
+      {% if session.get('is_admin') %}
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      {% else %}
+        <a href="{{ url_for('admin_login') }}">Log in</a>
+      {% endif %}
+    </span>
   </div>
 </footer>
 
