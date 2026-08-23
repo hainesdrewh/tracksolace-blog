@@ -3,7 +3,7 @@
 <channel>
 <title>tracksolace notes</title>
 <link>{{ site_url }}/</link>
-<description>Notes and thoughts, posted whenever there's something worth writing down.</description>
+<description>Notes from tracksolace.</description>
 {% for post in posts %}
 <item>
 <title>{{ post['title'] }}</title>

@@ -77,17 +77,7 @@ h1, h2, h3 { line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; }
 .header-nav a { color: var(--ink-soft); text-decoration: none; font-size: 0.95rem; }
 .header-nav a:hover { color: var(--ink); }
 
-/* Hero: centered text only, no image, no gradient. */
-.hero-minimal {
-  padding: var(--space-9) 0 var(--space-7);
-  text-align: center;
-}
-.hero-minimal h1 { font-size: clamp(2.25rem, 5vw, 3.25rem); margin: 0; }
-.hero-minimal p {
-  max-width: 40ch; margin: var(--space-4) auto 0; color: var(--ink-soft); font-size: 1.05rem;
-}
-
-.post-list-section { padding-bottom: var(--space-9); }
+.post-list-section { padding-top: var(--space-6); padding-bottom: var(--space-9); }
 .post-list { list-style: none; margin: 0; padding: 0; }
 .post-list-item + .post-list-item { border-top: 1px solid var(--border); }
 .post-list-link {
@@ -129,9 +119,19 @@ h1, h2, h3 { line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; }
 }
 .post-article-body pre code { background: none; padding: 0; color: inherit; }
 .post-article-body img { max-width: 100%; border-radius: var(--radius-md); }
-.post-article-back { margin-top: var(--space-7); }
-.post-article-back a { text-decoration: none; color: var(--ink-soft); font-size: 0.95rem; }
-.post-article-back a:hover { color: var(--accent); }
+.post-article-footer {
+  margin-top: var(--space-7); display: flex; align-items: center;
+  justify-content: space-between; gap: var(--space-4);
+}
+.post-article-footer a { text-decoration: none; color: var(--ink-soft); font-size: 0.95rem; }
+.post-article-footer a:hover { color: var(--accent); }
+.copy-link-btn {
+  background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--ink-soft); font: inherit; font-size: 0.85rem; padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+.copy-link-btn:hover { border-color: var(--ink-soft); color: var(--ink); }
+.copy-link-btn[data-copied] { color: var(--accent); border-color: var(--accent); }
 
 /* Admin */
 .admin-section { padding: var(--space-8) 0 var(--space-9); }

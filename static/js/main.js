@@ -10,3 +10,20 @@ document.querySelectorAll('form[data-confirm]').forEach((form) => {
     }
   });
 });
+
+document.querySelectorAll('[data-copy-link]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      const original = btn.textContent;
+      btn.textContent = 'Copied';
+      btn.setAttribute('data-copied', '');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.removeAttribute('data-copied');
+      }, 1500);
+    } catch (err) {
+      btn.textContent = 'Copy failed';
+    }
+  });
+});

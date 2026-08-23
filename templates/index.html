@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="hero-minimal">
-  <div class="container">
-    <h1>Notes</h1>
-    <p>Whatever's worth writing down, posted whenever it's ready. No schedule, no pitch.</p>
-  </div>
-</section>
-
 <section class="post-list-section">
   <div class="container">
     {% if posts %}
@@ -15,7 +8,7 @@
         {% for post in posts %}
         <li class="post-list-item">
           <a href="{{ url_for('view_post', slug=post['slug']) }}" class="post-list-link">
-            <span class="post-list-date">{{ post['created_at'][:10] }}</span>
+            <span class="post-list-date">{{ post['created_at'][:10] }} &middot; {{ post['read_minutes'] }} min</span>
             <h2>{{ post['title'] }}</h2>
             <p>{{ post['excerpt'] }}</p>
           </a>

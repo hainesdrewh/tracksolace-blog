@@ -93,6 +93,11 @@ def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def read_minutes(body_md):
+    words = len(body_md.split())
+    return max(1, round(words / 200))
+
+
 def login_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
@@ -135,20 +140,22 @@ def set_security_headers(response):
 @app.route("/")
 def index():
     db = get_db()
-    posts = db.execute(
+    rows = db.execute(
         "SELECT * FROM posts WHERE published = 1 ORDER BY created_at DESC"
     ).fetchall()
+    posts = [dict(row, read_minutes=read_minutes(row["body_md"])) for row in rows]
     return render_template("index.html", posts=posts)
 
 
 @app.route("/post/<slug>")
 def view_post(slug):
     db = get_db()
-    post = db.execute(
+    row = db.execute(
         "SELECT * FROM posts WHERE slug = ? AND published = 1", (slug,)
     ).fetchone()
-    if post is None:
+    if row is None:
         abort(404)
+    post = dict(row, read_minutes=read_minutes(row["body_md"]))
     return render_template("post.html", post=post, content_html=render_markdown(post["body_md"]))
 
 

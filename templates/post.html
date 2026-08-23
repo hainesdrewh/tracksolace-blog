@@ -5,12 +5,18 @@
 
 <article class="post-article">
   <div class="container container-narrow">
-    <p class="post-article-date">{{ post['created_at'][:10] }}</p>
+    <p class="post-article-date">
+      {{ post['created_at'][:10] }} &middot; {{ post['read_minutes'] }} min
+      {% if post['updated_at'][:10] != post['created_at'][:10] %}&middot; edited {{ post['updated_at'][:10] }}{% endif %}
+    </p>
     <h1>{{ post['title'] }}</h1>
     <div class="post-article-body">
       {{ content_html | safe }}
     </div>
-    <p class="post-article-back"><a href="{{ url_for('index') }}">&larr; All notes</a></p>
+    <p class="post-article-footer">
+      <a href="{{ url_for('index') }}">&larr; All notes</a>
+      <button type="button" class="copy-link-btn" data-copy-link>Copy link</button>
+    </p>
   </div>
 </article>
 
