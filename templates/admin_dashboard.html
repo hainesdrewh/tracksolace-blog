@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | tracksolace notes{% endblock %}
+{% block content %}
+
+<section class="admin-section">
+  <div class="container">
+    <div class="admin-dashboard-head">
+      <h1>Posts</h1>
+      <div class="admin-dashboard-actions">
+        <a href="{{ url_for('admin_new') }}" class="btn btn-primary">New post</a>
+        <form method="post" action="{{ url_for('admin_logout') }}" class="inline-form">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn-secondary">Log out</button>
+        </form>
+      </div>
+    </div>
+
+    {% if posts %}
+    <table class="admin-table">
+      <thead>
+        <tr><th>Title</th><th>Status</th><th>Updated</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for post in posts %}
+        <tr>
+          <td><a href="{{ url_for('admin_edit', post_id=post['id']) }}">{{ post['title'] }}</a></td>
+          <td>{{ 'Published' if post['published'] else 'Draft' }}</td>
+          <td>{{ post['updated_at'][:10] }}</td>
+          <td class="admin-table-actions">
+            {% if post['published'] %}
+              <a href="{{ url_for('view_post', slug=post['slug']) }}" target="_blank" rel="noopener">View</a>
+            {% endif %}
+            <form method="post" action="{{ url_for('admin_delete', post_id=post['id']) }}" class="inline-form" data-confirm="Delete this post permanently?">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+              <button type="submit" class="link-button">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="empty-state">No posts yet. Write the first one.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

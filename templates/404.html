@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Page not found | tracksolace notes{% endblock %}
+{% block content %}
+
+<section class="admin-section">
+  <div class="container container-narrow" style="text-align:center;">
+    <h1>That page doesn't exist.</h1>
+    <p>It might have been moved or never existed in the first place.</p>
+    <p><a href="{{ url_for('index') }}" class="btn btn-primary">Back to notes</a></p>
+  </div>
+</section>
+
+{% endblock %}

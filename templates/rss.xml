@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+<title>tracksolace notes</title>
+<link>{{ site_url }}/</link>
+<description>Notes and thoughts, posted whenever there's something worth writing down.</description>
+{% for post in posts %}
+<item>
+<title>{{ post['title'] }}</title>
+<link>{{ site_url }}/post/{{ post['slug'] }}</link>
+<guid>{{ site_url }}/post/{{ post['slug'] }}</guid>
+<pubDate>{{ post['created_at'] }}</pubDate>
+<description>{{ post['excerpt'] }}</description>
+</item>
+{% endfor %}
+</channel>
+</rss>

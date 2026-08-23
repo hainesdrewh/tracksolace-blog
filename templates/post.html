@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ post['title'] }} | tracksolace notes{% endblock %}
+{% block description %}{{ post['excerpt'] }}{% endblock %}
+{% block content %}
+
+<article class="post-article">
+  <div class="container container-narrow">
+    <p class="post-article-date">{{ post['created_at'][:10] }}</p>
+    <h1>{{ post['title'] }}</h1>
+    <div class="post-article-body">
+      {{ content_html | safe }}
+    </div>
+    <p class="post-article-back"><a href="{{ url_for('index') }}">&larr; All notes</a></p>
+  </div>
+</article>
+
+{% endblock %}

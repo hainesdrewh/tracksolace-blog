@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Log in | tracksolace notes{% endblock %}
+{% block content %}
+
+<section class="admin-section">
+  <div class="container container-narrow">
+    <h1>Log in</h1>
+    <form method="post" class="admin-form" novalidate>
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Log in</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}
