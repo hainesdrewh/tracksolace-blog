@@ -13,6 +13,16 @@
     <div class="post-article-body">
       {{ content_html | safe }}
     </div>
+
+    <div class="reactions" data-reactions data-slug="{{ post['slug'] }}" data-csrf="{{ csrf_token }}">
+      {% for emoji in reaction_emojis %}
+      <button type="button" class="reaction-btn" data-emoji="{{ emoji }}" data-count="{{ reactions[emoji] }}">
+        <span class="reaction-emoji">{{ emoji }}</span>
+        <span class="reaction-count">{{ reactions[emoji] }}</span>
+      </button>
+      {% endfor %}
+    </div>
+
     <p class="post-article-footer">
       <a href="{{ url_for('index') }}">&larr; All notes</a>
       <button type="button" class="copy-link-btn" data-copy-link>Copy link</button>

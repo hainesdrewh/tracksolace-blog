@@ -45,6 +45,15 @@ _login_attempts = {}
 LOGIN_MAX_ATTEMPTS = 5
 LOGIN_WINDOW_SECONDS = 300
 
+REACTION_EMOJIS = ["\U0001F44D", "❤️", "\U0001F525", "\U0001F602"]
+
+# Same in-memory approach as login attempts: reactions are public and
+# unauthenticated, so this caps how fast one IP can move any single
+# post's counts, without needing an account system for something this small.
+_reaction_attempts = {}
+REACTION_MAX_ATTEMPTS = 30
+REACTION_WINDOW_SECONDS = 60
+
 
 def get_db():
     if "db" not in g:
@@ -75,7 +84,25 @@ def init_db():
             updated_at TEXT NOT NULL
         )
     """)
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS reactions (
+            post_id INTEGER NOT NULL,
+            emoji TEXT NOT NULL,
+            count INTEGER NOT NULL DEFAULT 0,
+            PRIMARY KEY (post_id, emoji),
+            FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+        )
+    """)
     db.commit()
+
+
+def get_reaction_counts(db, post_id):
+    rows = db.execute(
+        "SELECT emoji, count FROM reactions WHERE post_id = ?", (post_id,)
+    ).fetchall()
+    counts = {emoji: 0 for emoji in REACTION_EMOJIS}
+    counts.update({row["emoji"]: row["count"] for row in rows})
+    return counts
 
 
 def slugify(title):
@@ -156,7 +183,41 @@ def view_post(slug):
     if row is None:
         abort(404)
     post = dict(row, read_minutes=read_minutes(row["body_md"]))
-    return render_template("post.html", post=post, content_html=render_markdown(post["body_md"]))
+    reactions = get_reaction_counts(db, post["id"])
+    return render_template(
+        "post.html", post=post, content_html=render_markdown(post["body_md"]),
+        reactions=reactions, reaction_emojis=REACTION_EMOJIS,
+    )
+
+
+@app.route("/post/<slug>/react", methods=["POST"])
+def react_to_post(slug):
+    ip = request.remote_addr or "unknown"
+    attempts = [t for t in _reaction_attempts.get(ip, []) if time.time() - t < REACTION_WINDOW_SECONDS]
+    if len(attempts) >= REACTION_MAX_ATTEMPTS:
+        abort(429)
+    attempts.append(time.time())
+    _reaction_attempts[ip] = attempts
+
+    emoji = request.form.get("emoji", "")
+    direction = request.form.get("direction", "")
+    if emoji not in REACTION_EMOJIS or direction not in ("add", "remove"):
+        abort(400)
+
+    db = get_db()
+    post = db.execute("SELECT id FROM posts WHERE slug = ? AND published = 1", (slug,)).fetchone()
+    if post is None:
+        abort(404)
+
+    delta = 1 if direction == "add" else -1
+    db.execute(
+        "INSERT INTO reactions (post_id, emoji, count) VALUES (?, ?, MAX(0, ?)) "
+        "ON CONFLICT(post_id, emoji) DO UPDATE SET count = MAX(0, count + ?)",
+        (post["id"], emoji, delta, delta),
+    )
+    db.commit()
+    counts = get_reaction_counts(db, post["id"])
+    return counts
 
 
 @app.route("/rss.xml")
