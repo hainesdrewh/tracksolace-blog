@@ -9,7 +9,14 @@
         <li class="post-list-item">
           <a href="{{ url_for('view_post', slug=post['slug']) }}" class="post-list-link">
             <span class="post-list-date">{{ post['created_at'][:10] }} &middot; {{ post['read_minutes'] }} min</span>
-            <h2>{{ post['title'] }}</h2>
+            <span class="post-list-title-row">
+              <h2>{{ post['title'] }}</h2>
+              {% if post['top_reactions'] %}
+              <span class="post-list-reactions">
+                {% for emoji, count in post['top_reactions'] %}<span>{{ emoji }} {{ count }}</span>{% endfor %}
+              </span>
+              {% endif %}
+            </span>
           </a>
         </li>
         {% endfor %}

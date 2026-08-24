@@ -170,7 +170,11 @@ def index():
     rows = db.execute(
         "SELECT * FROM posts WHERE published = 1 ORDER BY created_at DESC"
     ).fetchall()
-    posts = [dict(row, read_minutes=read_minutes(row["body_md"])) for row in rows]
+    posts = []
+    for row in rows:
+        counts = get_reaction_counts(db, row["id"])
+        top_reactions = [(emoji, count) for emoji, count in counts.items() if count > 0]
+        posts.append(dict(row, read_minutes=read_minutes(row["body_md"]), top_reactions=top_reactions))
     return render_template("index.html", posts=posts)
 
 
