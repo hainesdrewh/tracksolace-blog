@@ -2,7 +2,7 @@
 
 A small personal blog. Public reading, single-admin login to post, Markdown
 posts stored in SQLite. Built with the skills in
-[45-anti-slop-skills](https://github.com/hainesdrewh/45-anti-slop-skills)
+[45-anti-slop-skills](https://github.com/Kryhr/45-anti-slop-skills)
 (clean minimal direction).
 
 ## Local setup
