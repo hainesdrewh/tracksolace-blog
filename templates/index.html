@@ -10,7 +10,6 @@
           <a href="{{ url_for('view_post', slug=post['slug']) }}" class="post-list-link">
             <span class="post-list-date">{{ post['created_at'][:10] }} &middot; {{ post['read_minutes'] }} min</span>
             <h2>{{ post['title'] }}</h2>
-            <p>{{ post['excerpt'] }}</p>
           </a>
         </li>
         {% endfor %}
